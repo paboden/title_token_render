@@ -1,0 +1,3 @@
+name = Node Title Token Render
+description = Allows tokens to be added to a title field, and when title is displayed, will display the rendered token.
+core = 7.x

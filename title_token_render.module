@@ -1,0 +1,69 @@
+<?php
+
+/*
+ * Implements template_preprocess().
+ */
+function title_token_render_preprocess(&$vars) {
+  //$vars['title'] = token_replace($vars['title'], array(), array('clear' => true));
+  //$vars['head_title'] = token_replace($vars['head_title'], array(), array('clear' => true));
+  //$vars['head_array']['title'] = token_replace($vars['head_array']['title'], array(), array('clear' => true));
+}
+
+/*
+ * Implements hook_entity_view().
+ */
+function title_token_render_entity_view($entity, $type, $view_mode, $langcode) {
+  //$node->title = token_replace($node->title, array('node' => $node), array('clear' => TRUE));
+  //if ($view_mode == 'full') {
+    //drupal_set_title(token_replace($node->title, array('node' => $node), array('clear' => TRUE)));
+  //}
+}
+
+/*
+ * Implements hook_entity_view_alter().
+ */
+function title_token_render_entity_view_alter(&$build, $type) {
+  //$node->title = token_replace($node->title, array('node' => $node), array('clear' => TRUE));
+  //if ($view_mode == 'full') {
+    //drupal_set_title(token_replace($node->title, array('node' => $node), array('clear' => TRUE)));
+  //}
+}
+
+/*
+ * Implements hook_tokens_alter().
+ */
+function title_token_render_tokens_alter(array &$replacements, array $context) {
+  //if ($context['tokens']['title'] == '[node:title]') {
+    //$replacements[$context['data']['node']->title] = token_replace($context['data']['node']->title);
+  //}
+}
+
+/*
+ * Implements hook_form_FORM_ID_alter().
+ */
+function title_token_render_form_alter(&$form, &$form_state) {
+  //$form['tokens'] = array(
+    //'#theme' => 'token_tree_link',
+    //'#token_types' => array('node', 'term', 'user'),
+    //'#global_types' => TRUE,
+    //'#click_insert' => TRUE,
+  //);
+
+  //$form['#after_build'][] = '_title_token_render_form_title_alter';
+}
+
+/**
+ * Custom after build call.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @return array
+ */
+function _title_token_render_form_title_alter($form, &$form_state) {
+  //if (isset($form['#node_edit_form'])) {
+    //$form_title = token_replace($form['#node']->title, array(), array('clear' => TRUE));
+    //drupal_set_title(t('<em>Edit @type</em> "@title"', array('@type' => node_type_get_name($form['#node']->type), '@title' => $form_title)), PASS_THROUGH);
+  //}
+
+  //return $form;
+}

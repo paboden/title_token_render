@@ -1,0 +1,5 @@
+name = Title Token Render
+description = Allows tokens to be added to a title field, and when title is displayed, it will be display with the rendered token.
+core = 7.x
+
+dependencies[] = token

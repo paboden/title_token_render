@@ -1,0 +1,97 @@
+<?php
+
+/*
+ * Implements template_preprocess().
+ */
+function title_token_render_preprocess(&$vars) {
+  $vars['title'] = token_replace($vars['title'], array(), array('clear' => true));
+  $vars['head_title'] = token_replace($vars['head_title'], array(), array('clear' => true));
+  $vars['head_array']['title'] = token_replace($vars['head_array']['title'], array(), array('clear' => true));
+}
+
+/*
+ * Implements hook_node_view().
+ */
+function title_token_render_node_view($node, $view_mode, $langcode) {
+  // Whenever the node is rendered process the node title and set the value
+  // back to itself
+  $node->title = token_replace($node->title, array('node' => $node), array('clear' => TRUE));
+  // If its the full view mode, we need to use drupal_set_title to actually override
+  // the title with the token processed value.
+  if ($view_mode == 'full') {
+    drupal_set_title(token_replace($node->title, array('node' => $node), array('clear' => TRUE)));
+  }
+
+}
+
+/*
+ * Implements hook_tokens_alter().
+ */
+function node_title_token_render_tokens_alter(array &$replacements, array $context) {
+  // Since the token value is not actually saved as the title, it is possible to
+  // have the title token have a token value in it. (example: 'Hello, [user:name]').
+  // For modules and forms (like metatag) that set the head tag value to be
+  // [node:title], If we didn't process the token itself, the head tag would be
+  // 'Hello, [user:name] | Mysite' instead of 'Hello, Paboden | Mysite'.
+  if ($context['tokens']['title'] == '[node:title]') {
+    $replacements[$context['data']['node']->title] = token_replace($context['data']['node']->title);
+  }
+}
+
+/*
+ * Implements hook_node_view().
+ */
+function node_title_token_render_node_view($node, $view_mode, $langcode) {
+  // Whenever the node is rendered process the node title and set the value
+  // back to itself
+  $node->title = token_replace($node->title, array('node' => $node), array('clear' => TRUE));
+  // If its the full view mode, we need to use drupal_set_title to actually override
+  // the title with the token processed value.
+  if ($view_mode == 'full') {
+    drupal_set_title(token_replace($node->title, array('node' => $node), array('clear' => TRUE)));
+  }
+
+}
+
+/*
+ * Implements hook_form_FORM_ID_alter().
+ */
+function node_title_token_render_form_alter(&$form, &$form_state) {
+  if (isset($form['#node_edit_form'])) {
+    $form['tokens'] = array(
+      // This renders the link that opens up the token selector.
+      '#theme' => 'token_tree_link',
+      // The token types that have specific context. Can be multiple token types
+      // like 'term' and/or 'user'.
+      '#token_types' => array('node', 'user'),
+      // A boolean TRUE or FALSE whether to include 'global' context tokens like
+      // [current-user:*] or [site:*]. Defaults to TRUE.
+      '#global_types' => TRUE,
+      // A boolean whether to include the 'Click this token to insert in into
+      // the the focused textfield' JavaScript functionality. Defaults to TRUE.
+      '#click_insert' => TRUE,
+    );
+
+    $form['#after_build'][] = '_title_token_render_form_title_alter';
+  }
+}
+
+/**
+ * Custom after build call.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @return array
+ */
+function _title_token_render_form_title_alter($form, &$form_state) {
+  // Only if this is the node EDIT form.
+  // No sense in applying it to the node ADD form.
+  if (isset($form['#node_edit_form'])) {
+    // process the edit forms default title value and set new title for the edit
+    // node page.
+    $form_title = token_replace($form['#node']->title, array(), array('clear' => TRUE));
+    drupal_set_title(t('<em>Edit @type</em> "@title"', array('@type' => node_type_get_name($form['#node']->type), '@title' => $form_title)), PASS_THROUGH);
+  }
+
+  return $form;
+}
